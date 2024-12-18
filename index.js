@@ -1,7 +1,12 @@
 // index.js
 const express = require('express');
 const mongoose = require('mongoose');
+const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
+const auth = require('./middleware/auth');
+const meow = require('./middleware/meow');
+
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -9,11 +14,20 @@ const port = 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// app.use(meow);
+
 app.use('/products', productRoutes);
+// app.use('/products', meow, productRoutes);
+// app.use('/products', auth, productRoutes);
+app.use('/auth', authRoutes);
+
+
+const MONGO_DB_URI = process.env.MONGO_DB_URI;
+console.log('MONGO_DB_URI:', MONGO_DB_URI);
 
 // Connect to MongoDB
 mongoose
-  .connect('your-mongodb-connection-string-here')
+  .connect(MONGO_DB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
   })
