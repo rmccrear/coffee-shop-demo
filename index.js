@@ -16,9 +16,9 @@ app.use(express.json());
 
 // app.use(meow);
 
-app.use('/products', productRoutes);
+app.use('/api/v1/products', productRoutes);
 // app.use('/products', meow, productRoutes);
-// app.use('/products', auth, productRoutes);
+app.use('/api/v2/products', auth, productRoutes);
 app.use('/auth', authRoutes);
 
 

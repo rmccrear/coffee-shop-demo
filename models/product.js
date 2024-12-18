@@ -13,6 +13,9 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: String
+  },
   stock: {
     type: Number,
   },
@@ -24,3 +27,19 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
+
+// Example data
+
+// {
+//   "name": "Product 1",
+//   "price": 100,
+//   "description": "Description 1",
+//   "stock": 10,
+//   "image": "https://via.placeholder.com/150"
+// }
+
+// {
+//   "name": "Matcha Latte",
+//   "price": 10,
+//   "description": "Green tea latte",
+// }
