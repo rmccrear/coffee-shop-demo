@@ -1,8 +1,10 @@
 // routes/auth.js
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register a new user
 router.post('/register', async (req, res) => {
@@ -30,7 +32,7 @@ router.post('/login', async (req, res) => {
     }
     const token = jwt.sign(
       { userId: user._id, role: user.role },
-      'your_jwt_secret',
+      JWT_SECRET,
       { expiresIn: '1h' }
     );
     res.json({ token });

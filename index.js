@@ -16,11 +16,19 @@ app.use(express.json());
 
 // app.use(meow);
 
-app.use('/api/v1/products', productRoutes);
+// app.use('/api/v1/products', productRoutes);
 // app.use('/products', meow, productRoutes);
-app.use('/api/v2/products', auth, productRoutes);
+// app.use('/api/v2/products', auth, productRoutes);
+// app.use('/products', auth, productRoutes);
+app.use('/products', productRoutes);
 app.use('/auth', authRoutes);
 
+
+const errorHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+};
+app.use(errorHandler);
 
 const MONGO_DB_URI = process.env.MONGO_DB_URI;
 console.log('MONGO_DB_URI:', MONGO_DB_URI);

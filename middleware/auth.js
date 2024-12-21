@@ -1,5 +1,8 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 const auth = (req, res, next) => {
   const token = req.header('Authorization').replace('Bearer ', '');
@@ -9,7 +12,8 @@ const auth = (req, res, next) => {
       .json({ error: 'Access denied. No token provided.' });
   }
   try {
-    const decoded = jwt.verify(token, 'your_jwt_secret');
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log(decoded)
     req.user = decoded;
     next();
   } catch (error) {
