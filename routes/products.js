@@ -2,8 +2,8 @@
 
 const Router = require('express').Router;
 const router = Router();
-const upload = require('../middleware/upload');
-
+// const upload = require('../middleware/upload');
+const upload = require('../middleware/uploadAWS');
 const Product = require('../models/product');
 
 // Get all products
@@ -67,8 +67,8 @@ router.get('/:id', async (req, res, next) => {
 // Create a product
 router.post('/', upload, (req, res) => {
   const { name, price, description, category, stock } = req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
-  // const imageUrl = req.file ? req.file.location : '';
+  // const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+  const imageUrl = req.file ? req.file.location : '';
   try {
     const product = new Product({ name, price, description, category, stock, image: imageUrl });
     product.save();
