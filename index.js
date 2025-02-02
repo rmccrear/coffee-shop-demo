@@ -9,7 +9,7 @@ const meow = require('./middleware/meow');
 require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3001;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
