@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
       .limit(parseInt(limit))
       .skip((page - 1) * limit);
     const total = await Product.countDocuments(filter);
-    res.json({ total, products });
+    res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
