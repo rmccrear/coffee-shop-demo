@@ -2,8 +2,16 @@
 
 const Router = require('express').Router;
 const router = Router();
+let upload;
+if (process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME) {
+  upload = require('../middleware/uploadCloudinary');
+  console.log("Using Cloudinary for image uploads");
+} else {
+  upload = require('../middleware/upload');
+  console.log("Using disk storage for image uploads");
+}
 // const upload = require('../middleware/upload');
-const upload = require('../middleware/uploadCloudinary');
+// const upload = require('../middleware/uploadCloudinary');
 
 const Product = require('../models/product');
 
