@@ -2,10 +2,22 @@
 
 const Router = require('express').Router;
 const router = Router();
+let uploadMode = 'disk';
+if(process.env.CLOUDINARY_CLOUD_NAME) {
+  uploadMode = 'cloudinary';
+} else if(process.env.AWS_S3_BUCKET) {
+  uploadMode = 'aws';
+} else {
+  uploadMode = 'disk';
+}
+
 let upload;
-if (process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME) {
+if (uploadMode === 'cloudinary') {
   upload = require('../middleware/uploadCloudinary');
   console.log("Using Cloudinary for image uploads");
+} else if(uploadMode === 'aws') {
+  upload = require('../middleware/uploadAWS');
+  console.log("Using AWS S3 for image uploads");
 } else {
   upload = require('../middleware/upload');
   console.log("Using disk storage for image uploads");
@@ -81,7 +93,14 @@ router.post('/', upload, (req, res) => {
   // AWS URL
   // const imageUrl = req.file ? file.location : '';
   // Cloudinary URL
-  const imageUrl = req.file ? req.file.path : '';
+  let imageUrl = '';
+  if(uploadMode === 'cloudinary') {
+    imageUrl = req.file ? req.file.path : '';
+  } else if(uploadMode === 'aws') {
+    imageUrl = req.file ? req.file.location : '';
+  } else if(uploadMode === 'disk') {
+    imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+  }
   try {
     const product = new Product({ name, price, description, category, stock, image: imageUrl });
     product.save();
