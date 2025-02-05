@@ -13,6 +13,11 @@ const app = express();
 app.use(cors());
 const PORT = process.env.PORT || 3001;
 
+if(!process.env.AWS_S3_BUCKET && !process.env.CLOUDINARY_CLOUD_NAME) {
+  // attach /uploads to the /public folder
+  app.use('/uploads', express.static('public'));
+}
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
