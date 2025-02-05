@@ -2,7 +2,16 @@
 
 const Router = require('express').Router;
 const router = Router();
-const upload = require('../middleware/upload');
+let upload;
+if (process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME) {
+  upload = require('../middleware/uploadCloudinary');
+  console.log("Using Cloudinary for image uploads");
+} else {
+  upload = require('../middleware/upload');
+  console.log("Using disk storage for image uploads");
+}
+// const upload = require('../middleware/upload');
+// const upload = require('../middleware/uploadCloudinary');
 
 const Product = require('../models/product');
 
@@ -41,7 +50,7 @@ router.get('/', async (req, res) => {
       .limit(parseInt(limit))
       .skip((page - 1) * limit);
     const total = await Product.countDocuments(filter);
-    res.json({ total, products });
+    res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -67,8 +76,12 @@ router.get('/:id', async (req, res, next) => {
 // Create a product
 router.post('/', upload, (req, res) => {
   const { name, price, description, category, stock } = req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
-  // const imageUrl = req.file ? req.file.location : '';
+
+  // const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+  // AWS URL
+  // const imageUrl = req.file ? file.location : '';
+  // Cloudinary URL
+  const imageUrl = req.file ? req.file.path : '';
   try {
     const product = new Product({ name, price, description, category, stock, image: imageUrl });
     product.save();
