@@ -1,5 +1,6 @@
 // index.js
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
@@ -9,7 +10,8 @@ const meow = require('./middleware/meow');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+app.use(cors());
+const PORT = process.env.PORT || 3001;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -20,6 +22,12 @@ app.use(express.json());
 // app.use('/products', meow, productRoutes);
 // app.use('/api/v2/products', auth, productRoutes);
 // app.use('/products', auth, productRoutes);
+app.get("/", (req, res) => { 
+  res.json({
+    message: "Products API 🚀",
+  });
+});
+
 app.use('/products', productRoutes);
 app.use('/auth', authRoutes);
 
@@ -43,6 +51,6 @@ mongoose
     console.error('Error connecting to MongoDB:', error);
   });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
